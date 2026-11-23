@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual do Edodocs</title>
+<style>
+  :root {
+    --fundo: #f1f5f9; --cartao: #ffffff; --texto: #1e293b; --suave: #475569; --fraco: #64748b;
+    --linha: #e2e8f0; --azul: #2459a8; --azul-claro: #dbeafe; --azul-texto: #1e3a8a;
+    --verde: #16a34a; --amarelo: #ca8a04; --vermelho: #dc2626; --aviso: #fff7ed; --aviso-borda: #fdba74;
+  }
+  :root[data-theme="escuro"] {
+    --fundo: #0b1220; --cartao: #162238; --texto: #e5e9f0; --suave: #b6c2d4; --fraco: #8a99ae;
+    --linha: #26344d; --azul: #7fb0ff; --azul-claro: #1f3a66; --azul-texto: #dbe7ff;
+    --aviso: #2a2114; --aviso-borda: #8a5a1c;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--fundo); color: var(--texto);
+         font: 15px/1.6 "Segoe UI", Roboto, system-ui, sans-serif; }
+  .pagina { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 28px;
+            max-width: 1180px; margin: 0 auto; padding: 24px 20px 60px; }
+  nav { position: sticky; top: 16px; align-self: start; background: var(--cartao);
+        border: 1px solid var(--linha); border-radius: 12px; padding: 14px 10px;
+        max-height: calc(100vh - 32px); overflow-y: auto; }
+  nav b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+          color: var(--fraco); padding: 0 10px 6px; }
+  nav a { display: block; color: var(--suave); text-decoration: none; padding: 5px 10px;
+          border-radius: 8px; font-size: 14px; }
+  nav a:hover { background: var(--azul-claro); color: var(--azul-texto); }
+  header.capa { background: var(--cartao); border: 1px solid var(--linha); border-radius: 14px;
+                padding: 26px 28px; margin-bottom: 22px; border-left: 5px solid var(--azul); }
+  header.capa h1 { margin: 0 0 6px; font-size: 28px; }
+  header.capa p { margin: 0; color: var(--suave); font-size: 16px; }
+  section { background: var(--cartao); border: 1px solid var(--linha); border-radius: 14px;
+            padding: 22px 28px; margin-bottom: 18px; }
+  h2 { margin: 0 0 12px; font-size: 21px; display: flex; gap: 10px; align-items: center; }
+  h2 .num { background: var(--azul); color: #fff; border-radius: 50%; width: 30px; height: 30px;
+            display: inline-flex; align-items: center; justify-content: center; font-size: 15px; flex: none; }
+  :root[data-theme="escuro"] h2 .num { color: #0b1220; }
+  h3 { margin: 18px 0 6px; font-size: 16px; color: var(--azul); }
+  p { margin: 6px 0 10px; }
+  ul, ol { margin: 6px 0 12px; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .botao { display: inline-block; background: var(--azul-claro); color: var(--azul-texto);
+           border-radius: 6px; padding: 0 7px; font-weight: 600; font-size: 13.5px; white-space: nowrap; }
+  .dica, .atencao { border-radius: 10px; padding: 10px 14px; margin: 12px 0; font-size: 14.5px; }
+  .dica { background: var(--azul-claro); color: var(--azul-texto); }
+  .atencao { background: var(--aviso); border: 1px solid var(--aviso-borda); }
+  .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 10px 0; }
+  .item { border: 1px solid var(--linha); border-radius: 10px; padding: 12px 14px; }
+  .item b { display: block; margin-bottom: 2px; }
+  .item span { color: var(--suave); font-size: 14px; }
+  .bolinha { display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+             border: 1.5px solid rgba(0,0,0,.18); vertical-align: -1px; margin-right: 6px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 14.5px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--linha); vertical-align: top; }
+  th { color: var(--fraco); font-weight: 600; font-size: 13px; }
+  main a { color: var(--azul); font-weight: 600; }
+  code { background: var(--fundo); border: 1px solid var(--linha); border-radius: 5px; padding: 0 5px; font-size: 13.5px; }
+  @media (max-width: 860px) { .pagina { grid-template-columns: 1fr; } nav { position: static; max-height: none; } }
+  @media print {
+    body { background: #fff; font-size: 12.5px; }
+    .pagina { display: block; padding: 0; }
+    nav { display: none; }
+    section, header.capa { border: none; border-radius: 0; padding: 8px 0; margin: 0 0 8px; break-inside: auto; }
+    header.capa { border-left: none; }
+    h2 { break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <nav>
+    <b>Neste manual</b>
+    <a href="#o-que-e">O que é o Edodocs</a>
+    <a href="#comecar">Primeiros passos</a>
+    <a href="#tela">Conhecendo a tela</a>
+    <a href="#processos">Processos</a>
+    <a href="#assistente">Criar um processo</a>
+    <a href="#preencher">Preencher sozinho e de-para</a>
+    <a href="#atos">Página Atos</a>
+    <a href="#linhas">Incluir e editar linhas</a>
+    <a href="#varias">Várias pessoas no mesmo ato</a>
+    <a href="#edocs">Lançar no e-docs</a>
+    <a href="#ato-manual">Ato manual</a>
+    <a href="#diario">Lançar no Diário</a>
+    <a href="#conferir">Conferir publicação</a>
+    <a href="#diario-oficial">Página Diário Oficial</a>
+    <a href="#caixa">Caixa de Saída</a>
+    <a href="#ia">Inteligência artificial</a>
+    <a href="#execucao">Página Execução</a>
+    <a href="#config">Configurações</a>
+    <a href="#levar">Levar para outro computador</a>
+    <a href="#problemas">Quando algo não sai certo</a>
+  </nav>
+
+  <main>
+    <header class="capa">
+      <h1>Manual do Edodocs</h1>
+      <p>Atos administrativos do Word para o e-docs e para o Diário Oficial de Uberlândia,
+         sem digitar tudo de novo a cada ato.</p>
+    </header>
+
+    <section id="o-que-e">
+      <h2>O que é o Edodocs</h2>
+      <p>O Edodocs faz por você o trabalho repetitivo dos atos administrativos. Você mantém uma
+         <b>planilha</b> com os dados das pessoas (uma linha por pessoa) e um <b>Word modelo</b> com o
+         texto do ato. O Edodocs junta os dois e cuida do resto:</p>
+      <div class="grade">
+        <div class="item"><b>1. Monta cada ato</b><span>Preenche o Word com os dados de cada linha: nomes, números por extenso, feminino ou masculino, datas, trechos que mudam conforme a planilha e várias pessoas no mesmo ato.</span></div>
+        <div class="item"><b>2. Lança no e-docs</b><span>Cria o documento, coloca vistos, assinantes, destinatário e anexos e envia. Se você quiser, já dá o ciente e o visto na sua conta.</span></div>
+        <div class="item"><b>3. Lança no Diário Oficial</b><span>Cadastra no site do Diário os atos que já foram enviados no e-docs, com a data de veiculação certa.</span></div>
+        <div class="item"><b>4. Confere a publicação</b><span>Procura cada ato nos Diários publicados e marca na planilha em qual edição saiu.</span></div>
+      </div>
+      <p>Tudo o que acontece fica anotado na própria planilha (status e datas de cada etapa).
+         Assim você, e qualquer colega que abrir a planilha, sabe exatamente em que pé está cada ato.</p>
+      <div class="dica">O Edodocs só marca uma etapa como concluída depois que o site confirma.
+        Se a internet cair no meio de um envio, o ato fica marcado para você conferir; ele nunca é
+        enviado duas vezes sozinho.</div>
+    </section>
+
+    <section id="comecar">
+      <h2><span class="num">1</span>Primeiros passos</h2>
+      <ol>
+        <li>Descompacte o pacote que você recebeu e abra <code>Edodocs\Edodocs.exe</code>. Não precisa
+            instalar nada.</li>
+        <li>Se o Windows mostrar "O Windows protegeu o computador", clique em <b>Mais informações</b> e
+            depois em <b>Executar assim mesmo</b>. Isso aparece porque o programa é interno da Prefeitura.</li>
+        <li>Na <b>primeira abertura</b>, o Edodocs pergunta se você quer <b>importar os processos</b> de uma
+            versão anterior (um arquivo exportado) ou começar com os que já vêm no programa
+            (por exemplo Exoneração completa, Nomeação e Licença Prêmio).</li>
+        <li>Abra o menu <span class="botao">☰</span> e vá em <b>Configurações</b>. Em
+            <b>Usuários dos sites</b>, cadastre seu usuário e senha do <b>e-docs</b> e do <b>Diário Oficial</b> e
+            clique em <span class="botao">Salvar e testar</span>.</li>
+        <li>Ao lado de cada login aparece a situação: <span class="bolinha" style="background:#22c55e"></span>verde
+            quando o site aceitou, vermelho quando recusou.</li>
+        <li>Escolha o processo no canto de cima, à direita. Se ainda não houver nenhum, o Edodocs abre o
+            assistente para você criar o primeiro.</li>
+      </ol>
+      <div class="atencao">Suas senhas (e as chaves da IA) ficam guardadas de forma criptografada <b>só neste
+        computador e só no seu usuário do Windows</b>. Se você levar o Edodocs para outro computador, ele pede
+        de novo.</div>
+    </section>
+
+    <section id="tela">
+      <h2><span class="num">2</span>Conhecendo a tela</h2>
+      <table>
+        <tr><th>Onde</th><th>Para que serve</th></tr>
+        <tr><td><span class="botao">☰</span> Menu</td><td>Abre as páginas: Diário Oficial, Atos, Caixa de Saída, Execução, Processos, Configurações e Manual.</td></tr>
+        <tr><td>Processo (canto direito)</td><td>Troca o processo em uso. A tabela, os botões e o Diário de hoje passam a mostrar os atos desse processo. Aparece só nas páginas em que o processo importa.</td></tr>
+        <tr><td><span class="botao">☾ / ☀</span></td><td>Alterna entre o tema claro e o escuro.</td></tr>
+        <tr><td><span class="botao">ⓘ</span></td><td>Em vários lugares: abre uma explicação com exemplos daquele ponto.</td></tr>
+      </table>
+    </section>
+
+    <section id="processos">
+      <h2><span class="num">3</span>Processos: o seu tipo de ato</h2>
+      <p>Cada <b>processo</b> é um tipo de ato (Exoneração, Nomeação, Licença Prêmio, ou qualquer outro que você
+         criar): um ou mais Words modelo ligados a uma planilha. Na página <b>Processos</b> cada processo tem um
+         cartão. No cartão você vê e muda:</p>
+      <table>
+        <tr><th>No cartão</th><th>O que faz</th></tr>
+        <tr><td><span class="botao">✎</span> ao lado do nome</td><td>Muda o nome do processo. A planilha, os vistos e assinantes e o que já foi enviado continuam ligados a ele.</td></tr>
+        <tr><td>Planilha · <span class="botao">Alterar</span></td><td>Onde fica a planilha deste processo: no computador ou numa pasta da <b>rede</b> (por exemplo <code>\\servidor\pasta\planilha.xlsx</code>), para a equipe trabalhar na mesma planilha. <span class="botao">Usar a da pasta</span> volta para a planilha da pasta do processo.</td></tr>
+        <tr><td>Perguntar antes de enviar cada ato</td><td>Ligado: você vê cada ato antes do envio. Desligado: envia um atrás do outro, sem parar.
+          Nessa tela, e na aba <b>Ato</b> ao abrir uma linha da tabela, o botão <span class="botao">Abrir no Word (imprimir)</span>
+          abre uma cópia do ato preenchido no Word, para imprimir (Ctrl+P). Num ato de várias pessoas, sai o ato inteiro,
+          com todas elas, qualquer que seja a linha escolhida. A cópia não muda nada no envio.</td></tr>
+        <tr><td>Precisa de anexo</td><td>Ligado: cada ato vai ao e-docs com o(s) PDF(s) que você escolher (veja <a href="#edocs">Lançar no e-docs</a>).</td></tr>
+        <tr><td>Campos obrigatórios · <span class="botao">Escolher</span></td><td>Colunas que não podem ficar vazias (ex.: A PEDIDO, VÍNCULO, MATRÍCULA, NOME, VIGÊNCIA). A linha não é salva sem elas (os campos vazios ficam em vermelho) e o ato não é enviado.</td></tr>
+        <tr><td>Preencher sozinho</td><td>Liga o processo a uma tabela de consulta (veja <a href="#preencher">Preencher sozinho</a>).</td></tr>
+        <tr><td>Publicado no Diário Oficial</td><td>Desligado: o processo só vai ao e-docs.</td></tr>
+        <tr><td><span class="botao">Editar</span></td><td>Abre o assistente com o processo, para mudar o Word, os campos, os títulos e as opções dos sites.</td></tr>
+        <tr><td><span class="botao">Vistos e assinantes</span></td><td>Quem vista e quem assina neste processo (veja abaixo).</td></tr>
+        <tr><td><span class="botao">✕</span> no canto</td><td>Exclui o processo (com confirmação). Ele fica guardado em <code>saidas\Backup de processos</code>.</td></tr>
+      </table>
+      <p>No alto da página: <span class="botao">Novo processo</span>, <span class="botao">Exportar processos</span> e
+         <span class="botao">Importar processos</span> (veja <a href="#levar">Levar para outro computador</a>).</p>
+
+      <h3>Vistos e assinantes do processo</h3>
+      <ul>
+        <li><b>Sempre os mesmos vistos e assinantes neste processo</b>: ao ligar, você escolhe quem vista e quem
+            assina, e o Edodocs não pergunta mais a cada envio. Desligado, ele pergunta toda vez.</li>
+        <li>Quem envia <b>só vista se estiver na lista</b>: para vistar os próprios atos, inclua o seu nome.
+            Você vista sempre <b>em 1º</b>.</li>
+        <li><b>Vistar automaticamente os atos que eu enviar</b>: logo depois de enviar cada ato, o Edodocs dá o
+            <b>ciente</b> e o <b>visto</b> naquele documento na sua conta.</li>
+      </ul>
+    </section>
+
+    <section id="assistente">
+      <h2><span class="num">4</span>Criar um processo com o assistente</h2>
+      <p>Clique em <span class="botao">Novo processo</span>. Se você fechar no meio, da próxima vez o assistente
+         continua de onde parou. São seis passos:</p>
+      <ol>
+        <li><b>Antes de começar.</b> Dê um nome ao processo. Na dúvida, use <b>Treinar com um exemplo</b>: nada é salvo.</li>
+        <li><b>Tipo de ato.</b> Diga se o ato tem <b>uma pessoa</b> ou pode ter <b>várias pessoas</b>
+            (ex.: "exonera FULANO e OUTROS").</li>
+        <li><b>O Word.</b> Escolha o Word de um ato que você já fez. O texto aparece na tela:
+          <ul>
+            <li>selecione com o mouse o que muda de um ato para outro (nome, matrícula, cargo...) e clique em
+                <span class="botao">Marcar o que selecionei</span>. O Edodocs também sugere trechos que parecem dados;</li>
+            <li>o que às vezes aparece e às vezes não (ex.: "a pedido, ") marque como <b>Escolha entre opções</b>;</li>
+            <li>com a planilha pronta, <b>Usar a minha planilha</b> marca sozinho os valores da pessoa;</li>
+            <li>já tem um modelo com campos <code>{{NOME}}</code>? Pode escolher ele direto.</li>
+          </ul></li>
+        <li><b>A planilha.</b> Escolha a sua, ou clique em <b>Criar a planilha para mim</b>: o Edodocs cria uma
+            com uma coluna para cada campo, listas para escolher (SIM/NÃO) e formato de data.</li>
+        <li><b>Confira os campos.</b> Cada campo mostra de onde vem o valor e um exemplo
+            (bolinha vermelha = falta escolher). Os tipos são:
+          <table>
+            <tr><th>Tipo</th><th>Exemplo</th></tr>
+            <tr><td>Coluna da planilha</td><td>NOME → MARIA DA SILVA</td></tr>
+            <tr><td>Texto fixo</td><td>sempre "Secretaria Municipal de Administração"</td></tr>
+            <tr><td>Número por extenso</td><td>15 → quinze</td></tr>
+            <tr><td>Feminino / masculino</td><td>F → lotada · M → lotado</td></tr>
+            <tr><td>Data por extenso</td><td>05/10/2026 → 5 de outubro de 2026</td></tr>
+            <tr><td>Escolha entre opções</td><td>A PEDIDO = SIM → "a pedido, "; NÃO → nada</td></tr>
+            <tr><td>Muda conforme a planilha</td><td>regras "Se A PEDIDO é SIM e VÍNCULO é EFETIVO → escrever artigo 48"</td></tr>
+          </table>
+          <b>Se vazio, usar</b> diz o que entra quando a célula está vazia. Um campo vazio leva junto a vírgula ou
+          a barra de antes (não sai ", , da Secretaria" nem "HRB/"). Um parágrafo que ficou sem nenhum dado some do ato.
+          Aqui também dá para ter <b>um Word para cada situação</b> (ex.: um para uma pessoa e outro para várias).</li>
+        <li><b>Como vai ficar.</b> Escolha uma pessoa da planilha e veja, nas abas <b>O Word</b>, <b>No e-docs</b> e
+            <b>No Diário Oficial</b>, o ato exatamente como vai para cada lugar. Aqui ficam:
+          <ul>
+            <li><b>Títulos</b>: o do e-docs (até 50 caracteres; com várias pessoas termina em "E OUTROS") e o do
+                Diário. Dá para pôr o título na 1ª linha do ato (ex.: "DECRETO S/Nº - EXONERA ANA... E OUTROS").</li>
+            <li><b>Opções do e-docs</b>: Setor, Tipo e Grupo de destinatários, em listas com as opções da sua conta.</li>
+            <li><b>Opções do Diário</b>: Orgão/Secretaria, Categoria e Colunas, nas mesmas listas da tela "Incluir" do site.</li>
+            <li><b>Vistos e assinantes</b> e as <b>colunas da tabela dos atos</b> (ordem, mostrar/esconder e caixinhas).</li>
+          </ul>
+          Se estiver tudo certo, salve o processo.</li>
+      </ol>
+      <h3 id="montar-ia">Montar com IA</h3>
+      <p>Com uma IA configurada (<a href="#ia">Inteligência artificial</a>), o <span class="botao">Novo processo</span>
+         pergunta como você quer montar: <b>Montar eu mesmo</b> (os passos acima) ou <b>Montar com IA</b>.</p>
+      <ol>
+        <li>Clique em <span class="botao">Juntar arquivos...</span> e escolha atos que você já fez deste processo
+            (Word .docx/.doc ou PDF). Quanto mais variações, melhor: homem e mulher, uma pessoa e várias, com e sem
+            considerando. De 2 a 10 atos costuma bastar, com pelo menos um Word (o modelo sai dele).</li>
+        <li>Se quiser, explique alguma coisa (ex.: "com mais de uma pessoa, vai a tabela do anexo") e clique em
+            <span class="botao">Montar com IA</span>. Leva de 2 a 10 minutos.</li>
+        <li>A IA monta o Word, a planilha e as regras. O Edodocs refaz cada exemplo com o que ela montou e
+            compara com o original; o que não bate volta para a IA corrigir.</li>
+        <li>Se a IA ficou em dúvida, ela faz <b>perguntas rápidas</b>, uma por vez: clique na resposta (a primeira
+            é a sugestão dela). Se não souber, clique em <span class="botao">Não sei</span>: fica como a IA sugeriu.
+            Se você escolher outra resposta, a IA ajusta o processo (mais um pedido à IA).</li>
+        <li>O assistente abre em <b>Como vai ficar</b>, com o que a IA fez, o que conferiu e o que falta
+            <b>você</b> fazer: ler o ato de cada exemplo trocando a pessoa, escolher vistos e assinantes, conferir
+            os títulos e salvar. Nada é salvo antes disso, e dá para voltar a qualquer passo para ajustar.</li>
+      </ol>
+      <div class="atencao">O texto dos atos (nomes, matrículas, CPF) vai para o provedor de IA escolhido. Use só se
+        a sua equipe permite. A planilha criada vem vazia: os exemplos só servem para conferir.</div>
+      <div class="dica">A IA aprende com um guia que acompanha o programa. O que a sua equipe quiser ensinar a mais
+        (ex.: "sempre escreva Lei Orgânica Municipal") pode ser escrito no arquivo
+        <code>instruções para a IA.txt</code>, dentro de <code>_configurações do Edodocs</code> na pasta
+        compartilhada (ou em <code>configs</code>, sem pasta compartilhada).</div>
+    </section>
+
+    <section id="preencher">
+      <h2><span class="num">5</span>Preencher sozinho e de-para</h2>
+      <p>Com o <span class="botao">Preencher sozinho</span> (no cartão do processo), você liga o processo a uma
+         <b>tabela de consulta</b>, por exemplo a de todos os servidores. Depois, na Nova linha, é só procurar a
+         pessoa por <b>nome ou matrícula</b> e o resto vem preenchido (em verde: veio da tabela).</p>
+      <ul>
+        <li>O passo a passo sugere quase tudo: qual tabela, como achar a pessoa, o que puxar e um teste.</li>
+        <li>Dá para <b>juntar colunas</b> (cd_matricula + dv_matricula → 30.244-9), escolher o <b>formato</b>
+            (Primeiras Maiúsculas) e <b>Só preencher se…</b> (ex.: cargo efetivo só se a pessoa tem cargo efetivo).</li>
+        <li>A tabela é um arquivo que você exporta do sistema. Depois do prazo que você escolher, o Edodocs pede
+            para <b>atualizar</b> com o arquivo novo.</li>
+      </ul>
+      <h3>De-para (código → descrição)</h3>
+      <p>Quando a tabela só traz o código (ex.: lotação <code>0312</code>), crie em <b>Configurações → De-para</b> uma
+         lista dizendo o que cada código quer dizer ("Secretaria Municipal de Governo"). O ato já vem com a
+         descrição. Dá para usar só parte do código (ex.: os 2 primeiros dígitos), colar do Excel e exportar ou
+         importar o de-para. Um de-para serve para todos os processos.</p>
+    </section>
+
+    <section id="atos">
+      <h2><span class="num">6</span>Página Atos</h2>
+      <p>É a página principal. No alto, o resumo: quantos atos há na planilha, quantos já foram enviados ao
+         e-docs e ao Diário, quantos foram publicados e quantos têm erro. Logo abaixo, as três etapas, cada uma
+         com o botão <span class="botao">Começar</span> e quantos atos estão esperando por ela.</p>
+
+      <h3>A tabela e as bolinhas</h3>
+      <p>Cada linha é uma pessoa. As três bolinhas mostram a situação de cada etapa (e-docs, Diário, Publicado):</p>
+      <table>
+        <tr><td><span class="bolinha" style="background:#22c55e"></span>Verde</td><td>Concluído (o site confirmou).</td></tr>
+        <tr><td><span class="bolinha" style="background:#facc15"></span>Amarelo</td><td>Aguardando: é o próximo passo, ou a conferência ainda está tentando.</td></tr>
+        <tr><td><span class="bolinha" style="background:#ef4444"></span>Vermelho</td><td>Erro. Passe o mouse na bolinha para ver o motivo.</td></tr>
+        <tr><td><span class="bolinha" style="background:#ffffff"></span>Branco</td><td>Ainda não feito.</td></tr>
+      </table>
+      <p>A coluna <b>Criado por</b>, logo depois de Linha, mostra quem enviou o ato ao e-docs: o primeiro nome da conta
+         do e-docs usada no envio (o Edodocs pega o nome no próprio e-docs, pelo CPF). Fica gravado na planilha, na
+         coluna <b>criado_por</b>, ao lado das colunas de status. Atos enviados antes dessa novidade ficam com ela vazia.</p>
+      <ul>
+        <li>Use as abas <b>Todos, Pendentes e-docs, Pendentes Diário, Aguardando publicação e Com erro</b> para
+            filtrar, e a busca para achar por nome, matrícula ou número do ato. A pasta ao lado da busca abre a
+            pasta da planilha.</li>
+        <li>Na coluna da linha aparece <b>1 pessoa</b> ou <b>N pessoas</b>: atos com várias pessoas ficam
+            agrupados. Clique no grupo para abrir e ver as pessoas daquele ato.</li>
+        <li><span class="botao">Colunas</span>: muda a ordem, mostra ou esconde colunas e cria <b>caixinhas</b> de
+            marcar à mão (ex.: CONFERIDO). Marcada, a caixinha grava SIM na planilha.</li>
+      </ul>
+
+      <h3>Ações em várias linhas</h3>
+      <p>Marque as linhas pela caixa da esquerda (marcar um grupo marca todas as pessoas dele). Aparecem os
+         botões:</p>
+      <ul>
+        <li><span class="botao">Desfazer Diário</span> e <span class="botao">Desfazer e-docs e Diário</span>: apagam o
+            status daquela etapa nas linhas marcadas. O ato volta a ficar pronto para ser enviado.</li>
+        <li><span class="botao">Excluir linhas</span>: apaga as linhas marcadas da planilha (com confirmação; avisa se
+            alguma já foi enviada).</li>
+      </ul>
+      <div class="atencao">Desfazer só muda a planilha. Nada é apagado nos sites: se o documento existe no
+        e-docs, cancele por lá, se for o caso.</div>
+      <div class="dica">Se a planilha estiver aberta no Excel (no seu computador ou no de um colega, na rede), o
+        Edodocs mostra "Aguardando a planilha ser fechada" e grava sozinho assim que ela for fechada. Assim
+        ninguém apaga o trabalho de ninguém.</div>
+    </section>
+
+    <section id="linhas">
+      <h2><span class="num">7</span>Incluir e editar linhas sem abrir o Excel</h2>
+      <h3>Nova linha</h3>
+      <p>Clique em <span class="botao">Nova linha</span>. O formulário ajuda a preencher: listas para escolher
+         (SIM/NÃO, F/M...), calendário nas datas (pode digitar só os números, as barras entram sozinhas) e
+         sugestões para o que se repete (cargo, secretaria). Campos com <b>*</b> são obrigatórios.</p>
+      <ul>
+        <li><span class="botao">Adicionar à lista</span>: guarda a linha e limpa o formulário para a próxima.
+            No fim, <span class="botao">Salvar</span> grava todas de uma vez.</li>
+        <li><span class="botao">Repetir a última</span>: começa a próxima com os dados da anterior, para mudar só o
+            que for diferente.</li>
+        <li><span class="botao">Outra pessoa do mesmo ato</span>: a próxima pessoa vai no <b>mesmo ato</b> da anterior.
+            Copia o que é do ato (número, cargo...) e deixa em branco os dados da pessoa. Sem número do ato, as duas
+            ganham o mesmo número: é isso que as coloca juntas.</li>
+      </ul>
+      <h3>Editar uma linha</h3>
+      <p>Clique na linha para abrir a janela dela, com três abas:</p>
+      <ul>
+        <li><b>Dados</b>: edite e clique em <span class="botao">Salvar</span>. As fórmulas da planilha são mantidas e
+            recalculadas. <span class="botao">Excluir</span> apaga a linha.</li>
+        <li><b>Ato montado</b>: o texto do ato exatamente como vai para os sites.</li>
+        <li><b>Status</b>: a situação de cada etapa, com as datas, e os botões
+            <span class="botao">Desfazer envio no e-docs</span> e <span class="botao">Desfazer envio no Diário</span>.</li>
+      </ul>
+    </section>
+
+    <section id="varias">
+      <h2><span class="num">8</span>Várias pessoas no mesmo ato</h2>
+      <p>Num processo de várias pessoas (ex.: Exoneração, Nomeação), cada pessoa continua numa linha da planilha,
+         e uma coluna diz quais vão juntas (ex.: <b>Nº DO DECRETO</b>): <b>linhas com o mesmo valor viram um ato
+         só</b>. Linha com essa coluna vazia vira um ato sozinha.</p>
+      <ul>
+        <li>No Word, o parágrafo de uma pessoa se repete para cada uma, com numeração automática (I, II, III...) e
+            "<b>;</b>" nas do meio e "<b>.</b>" na última.</li>
+        <li>O título termina com <b>E OUTROS</b> quando o ato tem mais de uma pessoa.</li>
+        <li>Na tabela, o ato aparece agrupado ("N pessoas").</li>
+        <li>Faltou alguém num ato já salvo? Clique no <span class="botao">+👤</span> ao lado de "1 pessoa" ou
+            "N pessoas" (ou em <span class="botao">Outra pessoa deste ato</span>, na janela da linha). O formulário
+            vem com o que é do ato (número, cargo, edital...) e você só preenche os dados da pessoa. Se o ato ainda
+            não tinha número, as duas linhas ganham o mesmo.</li>
+        <li>No envio com anexo, cada pessoa pode ter os seus PDFs; todos vão no mesmo documento, com o nome da
+            pessoa na frente do arquivo. Um PDF que é do ato inteiro (ex.: o ofício) vai em
+            <span class="botao">Ofício do ato todo...</span>: entra uma vez só, com o nome original, e já basta
+            para o ato ser enviado.</li>
+      </ul>
+    </section>
+
+    <section id="edocs">
+      <h2><span class="num">9</span>Lançar no e-docs</h2>
+      <p>Clique em <span class="botao">Começar</span> na etapa 1. O Edodocs vai para a página Execução e faz,
+         para cada ato ainda não enviado:</p>
+      <ol>
+        <li><b>Anexos, antes de tudo</b> (se o processo <b>precisa de anexo</b>): abre uma janela com todos os atos.
+            Escolha os PDFs de cada um (num ato com várias pessoas, os de cada pessoa e/ou um só para o ato todo, como o ofício) e clique em
+            <span class="botao">Começar</span>. Depois o envio segue sem parar para perguntar. Ato sem anexo é pulado.
+            Só aceita PDF.</li>
+        <li><b>Entra no e-docs</b> com o seu usuário.</li>
+        <li><b>Vistos e assinantes.</b> Se o processo tem vistos e assinantes fixos, usa esses. Se não, pergunta.
+            Você pesquisa direto no e-docs por <b>CPF, nome ou matrícula</b> (com o <b>dígito verificador</b> no
+            final, por exemplo 123450). As últimas pessoas escolhidas aparecem para um clique só, e a escolha da
+            última vez já vem marcada. Clique nas pessoas na ordem do visto ou da assinatura.</li>
+        <li><b>Documento esquecido em montagem.</b> Se você tiver um documento em montagem no e-docs, o e-docs
+            gravaria o novo ato por cima dele. O Edodocs mostra quais são e só cancela se você autorizar.
+            Documentos já enviados nunca são mexidos.</li>
+        <li><b>Confere os campos obrigatórios</b>: ato com campo obrigatório vazio não é enviado (diz qual e de quem).</li>
+        <li><b>Monta o documento</b>: título, texto, vistos, assinantes, destinatário e anexos.</li>
+        <li><b>Pergunta antes de enviar</b> (se estiver ligado no processo), mostrando o ato montado:
+            <span class="botao">Cancelar tudo</span>, <span class="botao">Pular este ato</span>,
+            <span class="botao">Aceitar todos os próximos</span> ou <span class="botao">Enviar</span>.</li>
+        <li><b>Envia</b> e só marca "Enviado com sucesso" (com data e hora) quando o e-docs confirma.</li>
+        <li><b>Vista</b> o ato na sua conta, se a opção estiver ligada no processo.</li>
+      </ol>
+      <div class="dica">Se um ato for pulado, cancelado ou der erro depois de o documento ser criado, o Edodocs
+        cancela esse rascunho no e-docs sozinho, para ele não travar os próximos atos. Se o e-docs demorar a
+        responder, ele tenta de novo antes de desistir.</div>
+    </section>
+
+    <section id="ato-manual">
+      <h2><span class="num">10</span>Ato manual (ato sem processo)</h2>
+      <p>Para o ato que é diferente toda vez e não tem planilha nem processo, use o menu <b>Ato manual</b>.
+         Você escreve e envia pelo Edodocs, sem precisar abrir o e-docs.</p>
+      <p>Antes, escolha a tela do e-docs: <b>Instrumentos Jurídicos/Normativos</b> (portarias, decretos: com vistos,
+         assinantes e destinatários publicadores) ou <b>Documentos Genéricos</b> (atestes, ofícios: com
+         <b>Iniciais do Nome no Rodapé</b> e <b>Incluir Visto?</b>; sem destinatários). Cada conta do e-docs tem uma, a
+         outra ou as duas: a que a sua conta não tem aparece apagada. Nos Documentos Genéricos, os vistos só são
+         perguntados no fim se <b>Incluir Visto?</b> estiver em Sim. As listas de Setor e Tipo são buscadas na tela
+         escolhida, com a sua conta.</p>
+      <p>A tela é igual à do e-docs, com os campos no mesmo lugar: <b>Setor</b>, <b>Tipo</b> e <b>Data</b> em cima,
+         <b>Nossa Identificação</b> (o título do ato no e-docs), o <b>Texto do documento</b> (com tamanho do texto — selecione o trecho e escolha em <b>Tamanho</b> —, negrito, itálico,
+         alinhamento, recuo, listas e tabelas: o botão de tabela abre uma grade para escolher linhas × colunas e tem a opção de apagar a tabela onde está o cursor. Colar do Excel também vira tabela, com a formatação dele: células mescladas, alinhamento, negrito, tamanho da letra, bordas e quebras de linha. Colado numa tabela vazia, ela vira a do Excel; numa tabela já preenchida, entra só o texto, a partir da célula do cursor) e, à direita, <b>Doc. Anexo(s)</b> e <b>Dest. Publicador(es)</b>. As listas de
+         Setor, Tipo e Grupo vêm do seu e-docs (botão <span class="botao">Buscar no e-docs</span>).</p>
+      <ol>
+        <li>Escreva o ato. Ele é salvo sozinho como rascunho, alguns segundos depois de você mexer.</li>
+        <li>Se quiser, escolha os PDFs em <b>Doc. Anexo(s)</b>.</li>
+        <li>Clique em <span class="botao">Enviar ao e-docs</span>. Na última etapa, o Edodocs pergunta
+            <b>quem vista</b> e <b>quem assina</b>, como na execução normal. Vão os anexos que você escolheu na tela.</li>
+        <li>Ele mostra o ato montado: <span class="botao">Enviar</span> ou <span class="botao">Cancelar</span>.
+            Cancelando, o documento não fica no e-docs e o ato continua salvo aqui como rascunho.</li>
+      </ol>
+      <p>A aba <b>Meus atos manuais</b> guarda todos: rascunhos, enviados (com o número do documento) e os que deram
+         erro. Para enviar vários de uma vez, marque as caixinhas dos rascunhos e clique em
+         <span class="botao">Enviar atos (N)</span>: quem vista e quem assina é perguntado uma vez só e vale para todos.
+         Dá para <span class="botao">Continuar</span> um rascunho, ver o texto, apagar da lista (o documento
+         enviado continua no e-docs) ou <span class="botao">Fazer uma cópia</span> para mandar outro parecido.</p>
+    </section>
+
+    <section id="diario">
+      <h2><span class="num">11</span>Lançar no Diário Oficial</h2>
+      <p>A etapa 2 cadastra no site do Diário Oficial os atos que já foram <b>enviados com sucesso no e-docs</b>.
+         A data de veiculação é calculada sozinha: <b>o dia útil seguinte ao envio ao e-docs</b>.</p>
+      <ul>
+        <li>Antes de cada envio você vê o ato e escolhe enviar, pular ou cancelar (se a pergunta estiver ligada).</li>
+        <li>O ato só é marcado como enviado depois que o Edodocs confirma o cadastro na lista de publicações do site.</li>
+        <li>O título do ato vai num campo próprio do site; o texto vai sem a linha do título.</li>
+        <li>Orgão/Secretaria, Categoria e Colunas são os escolhidos no processo (passo Como vai ficar → No Diário Oficial).</li>
+      </ul>
+    </section>
+
+    <section id="conferir">
+      <h2><span class="num">12</span>Conferir publicação</h2>
+      <p>A etapa 3 baixa os Diários Oficiais publicados e procura cada ato enviado. Cada ato tem até
+         <b>3 tentativas</b>: o Diário da data de veiculação e os dos dois dias úteis seguintes.</p>
+      <ul>
+        <li>Achou: a planilha recebe "Publicado com sucesso no diário oficial" com o número e a data da edição,
+            e a coluna <b>Data publicação</b> é preenchida.</li>
+        <li>Não achou ainda: fica amarelo e tenta de novo no próximo Diário.</li>
+        <li>Não achou nas 3 tentativas: fica vermelho para você conferir.</li>
+      </ul>
+    </section>
+
+    <section id="diario-oficial">
+      <h2><span class="num">13</span>Página Diário Oficial</h2>
+      <ul>
+        <li><b>Diário de hoje</b>: na primeira vez que você abre o Edodocs no dia, ele baixa o Diário de hoje
+            sozinho, inclusive as edições extras. Mostra quais atos do processo em uso saíram nele e
+            <b>já marca esses atos como publicados na planilha</b>. Ao trocar de processo, a conferência é refeita
+            para o novo processo. <span class="botao">Verificar de novo</span> confere outra vez.</li>
+        <li><b>Edições recentes</b>: a lista das últimas edições, com <span class="botao">Baixar</span> ou
+            <span class="botao">Abrir</span> o PDF.</li>
+        <li>Para conferir outros dias, use a etapa <b>Conferir publicação</b> na página Atos.</li>
+      </ul>
+    </section>
+
+    <section id="caixa">
+      <h2><span class="num">14</span>Caixa de Saída</h2>
+      <p>Mostra os documentos que chegaram para você no e-docs, cada um num quadradinho, com o PDF para abrir
+         (os PDFs ficam em <code>saidas\Recebidos</code>). No alto, <b>Cards</b> / <b>Lista</b> troca o jeito de ver:
+         em Lista, cada documento fica numa linha, um embaixo do outro, para ver mais de uma vez (o resumo da IA aparece
+         passando o mouse no título). O Edodocs lembra a escolha. Em cada quadradinho:</p>
+      <ul>
+        <li><span class="botao">Ciente</span>, <span class="botao">Vistar</span> ou <span class="botao">Cancelar</span>
+            (o cancelamento pede o motivo e joga o documento fora, sem ciente e sem visto).</li>
+        <li>O ícone de caminho mostra a <b>tramitação</b>: por onde o documento já passou e quem ainda falta.</li>
+        <li>O ícone de <b>IA</b> (✨) resume aquele documento (só com a IA configurada).</li>
+        <li>Despachos não têm ciente nem visto: ficam para fazer no site (botão do globo).</li>
+      </ul>
+      <p>No alto: <span class="botao">Dar ciente em todos</span>, <span class="botao">Vistar tudo</span> (dá o ciente
+         que faltar e vista os que são de visto), <span class="botao">Cancelar marcados</span> e
+         <span class="botao">Resumir tudo</span>.</p>
+      <div class="dica">A IA não resume nada sozinha: só quando você clica. Cada documento é resumido <b>uma vez
+        só</b> e o resumo fica guardado; da próxima vez aparece direto, sem enviar de novo.</div>
+    </section>
+
+    <section id="ia">
+      <h2><span class="num">15</span>Inteligência artificial</h2>
+      <p>Em <b>Configurações → Inteligência artificial</b> você pode cadastrar <b>mais de um provedor</b> e escolher
+         qual usar (clicando na bolinha da esquerda; o em uso fica marcado "em uso").</p>
+      <ol>
+        <li>Em <b>Adicionar uma IA</b>, escolha o provedor: Anthropic (Claude), OpenAI (ChatGPT), DeepSeek,
+            Google (Gemini), Groq, OpenRouter, Mistral, Ollama (no computador) ou <b>Outro</b> (qualquer API no formato
+            da OpenAI, pelo endereço).</li>
+        <li>Cole a chave da API e clique em <span class="botao">Salvar e testar</span>.</li>
+        <li>Escolha o <b>Modelo</b> na lista (<span class="botao">↻</span> busca os modelos da chave) ou escreva o nome.</li>
+      </ol>
+      <div class="atencao">A Anthropic lê o PDF inteiro, inclusive digitalizado. Os outros provedores recebem só o
+        texto do PDF: um PDF que é só imagem (digitalizado) não dá para resumir com eles. Lembre que os documentos
+        resumidos são enviados ao provedor escolhido.</div>
+    </section>
+
+    <section id="execucao">
+      <h2><span class="num">16</span>Página Execução</h2>
+      <p>Mostra tudo o que está acontecendo, passo a passo, com hora: o ato da vez, a barra de progresso e as
+         mensagens de cada etapa.</p>
+      <ul>
+        <li>Quando o site demora, aparece "Ainda trabalhando · última atualização há N s": o programa não travou.</li>
+        <li><span class="botao">Cancelar execução</span> para no próximo ponto seguro (antes do próximo ato ou na
+            próxima pergunta), nunca no meio de um envio, para o status não ficar sem gravar.</li>
+      </ul>
+    </section>
+
+    <section id="config">
+      <h2><span class="num">17</span>Configurações</h2>
+      <ul>
+        <li><b>Usuários dos sites</b>: usuário e senha do e-docs e do Diário Oficial.</li>
+        <li><b>Pasta compartilhada</b>: veja a seção abaixo.</li>
+        <li><b>Inteligência artificial</b>: os provedores de IA (veja acima).</li>
+        <li><b>De-para</b>: listas de código → descrição para o Preencher sozinho.</li>
+        <li><b>Pastas</b>: atalhos para as pastas dos processos, dos Diários baixados e das saídas.</li>
+        <li><b>Opções avançadas</b>: pausas entre requisições e entre atos. Só mude se alguém pedir.</li>
+      </ul>
+      <p>A planilha de cada processo e o "Perguntar antes de enviar" agora ficam no cartão de cada processo, na
+         página Processos.</p>
+    </section>
+
+    <section id="levar">
+      <h2><span class="num">18</span>Levar para outro computador</h2>
+      <ul>
+        <li><span class="botao">Exportar processos</span> (página Processos) guarda os processos num arquivo na sua
+            pasta Downloads. Você escolhe o que levar junto: tabelas de consulta, planilhas e de-paras.</li>
+        <li>No outro computador, <span class="botao">Importar processos</span> (ou, na primeira abertura,
+            "Já tenho processos exportados") traz tudo de volta.</li>
+        <li>Para atualizar o Edodocs numa máquina que já tem ele, basta trocar o <code>Edodocs.exe</code> e a pasta
+            <code>_internal</code>: os processos e as configurações de lá continuam.</li>
+        <li>Senhas e chaves da IA não vão junto: cadastre de novo no outro computador.</li>
+      </ul>
+    </section>
+
+    <section id="compartilhada">
+      <h3>Pasta compartilhada: todos com os mesmos processos</h3>
+      <p>Para que todos usem os mesmos processos, com as mesmas regras, tabelas de consulta e de-paras, escolha
+         <b>uma pasta só</b> no servidor: a pasta dos processos. Não é preciso escolher processo por processo.</p>
+      <ul>
+        <li>Em <b>Configurações → Pasta compartilhada</b>, clique em <span class="botao">Escolher a pasta dos
+            processos no servidor...</span> e cole o caminho da rede (ex.: <code>\\servidor\Edodocs\processos</code>).</li>
+        <li>Dentro dela, cada processo fica numa pasta com o nome dele (<code>Nomeação</code>,
+            <code>Exoneração</code>...), com o Word, as regras e a planilha. O Edodocs acha cada um sozinho.
+            As tabelas de consulta e os de-para ficam na pasta <code>_configurações do Edodocs</code>: não mexa nela.</li>
+        <li>Na primeira vez, se a pasta estiver vazia, o Edodocs pergunta se leva os processos deste computador para
+            lá. Nos outros computadores, escolha o <b>mesmo caminho</b>: os processos já aparecem.</li>
+        <li>O que uma pessoa muda (Word, regras, planilha, de-para) vale para todos. Antes de mudar um processo, uma
+            cópia de como ele estava fica em <code>_configurações do Edodocs\versões anteriores</code>.</li>
+        <li>Duas pessoas podem incluir linhas na mesma planilha ao mesmo tempo: o Edodocs grava uma por vez.</li>
+        <li>Senhas, IA e o tema continuam em cada computador. O Edodocs em si (o programa) não se atualiza
+            sozinho: troque-o em todas as máquinas quando houver versão nova.</li>
+        <li>Se a rede cair, a página Processos avisa. <span class="botao">Usar só este computador</span> volta aos
+            processos que ficaram na máquina.</li>
+      </ul>
+    </section>
+
+    <section id="problemas">
+      <h2><span class="num">19</span>Quando algo não sai certo</h2>
+      <table>
+        <tr><th>O que aparece</th><th>O que fazer</th></tr>
+        <tr><td>"Aguardando a planilha ser fechada"</td><td>Feche a planilha no Excel (ou peça ao colega que está com ela aberta). O Edodocs continua sozinho.</td></tr>
+        <tr><td>Login recusado</td><td>O usuário salvo é apagado. Cadastre de novo em Configurações, com cuidado na senha.</td></tr>
+        <tr><td>Ninguém encontrado na pesquisa de pessoas</td><td>Confira o CPF ou use o nome. Na matrícula, coloque o dígito verificador no final.</td></tr>
+        <tr><td>Documento em montagem no e-docs</td><td>Autorize o cancelamento quando o Edodocs perguntar, ou envie/cancele o documento no site e comece de novo.</td></tr>
+        <tr><td>Ato pulado: "campo obrigatório vazio"</td><td>Preencha o campo indicado na linha da pessoa e envie de novo.</td></tr>
+        <tr><td>Ato pulado: "sem anexo"</td><td>O processo precisa de anexo e nenhum PDF foi escolhido para aquele ato. Envie de novo e escolha o PDF.</td></tr>
+        <tr><td>Pessoas que deviam ir juntas saíram em atos separados</td><td>Elas precisam ter o mesmo valor na coluna que junta (ex.: Nº DO DECRETO). Use "Outra pessoa do mesmo ato" na Nova linha.</td></tr>
+        <tr><td>Bolinha vermelha na tabela</td><td>Passe o mouse para ver o motivo. Confira no site; se precisar, use Desfazer e envie de novo.</td></tr>
+        <tr><td>"Enviado, mas não foi vistado automaticamente"</td><td>O ato foi enviado normalmente; dê o ciente e o visto direto no e-docs (ou na Caixa de Saída).</td></tr>
+        <tr><td>Envio sem confirmação</td><td>A conexão caiu no meio do envio. Confira no site se o ato chegou antes de rodar de novo.</td></tr>
+        <tr><td>"Não consegui mudar o nome / excluir"</td><td>Algum arquivo do processo está aberto no Word ou no Excel. Feche e tente de novo.</td></tr>
+        <tr><td>A IA não resume ("só lê texto")</td><td>O PDF é digitalizado. Use a Anthropic (lê imagem) ou abra o PDF para ler.</td></tr>
+      </table>
+      <p>Se precisar de ajuda, envie a quem cuida do Edodocs o arquivo <code>configs\edodocs.log</code>, que fica
+         na pasta do programa. Ele explica o que aconteceu. As senhas não ficam nesse arquivo.</p>
+    </section>
+  </main>
+</div>
+<script>
+  // O app abre o manual com ?tema=escuro quando está no tema escuro
+  if (new URLSearchParams(location.search).get("tema") === "escuro") {
+    document.documentElement.setAttribute("data-theme", "escuro");
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+rich
+python-docx
+lxml
+openpyxl
+pypdfium2
+pyinstaller
+curl_cffi
+nicegui
+pywebview
+pywin32
+anthropic

@@ -1,0 +1,31 @@
+# Gerados pelo build.bat
+build/
+assets/versao.txt
+dist/
+pacotes/
+*.zip
+*.spec
+__pycache__/
+
+# Usuarios, senhas e configuracoes locais
+configs/*
+!configs/.gitkeep
+
+# Dados reais (planilhas, CPFs, Diarios baixados, resultados)
+# (dos processos sobe so o Word da mala direta; a planilha fica de fora)
+entradas/processos/**/*.xlsx
+entradas/usuarios_vistos/*
+!entradas/usuarios_vistos/.gitkeep
+entradas/Diario_oficial/*
+entradas/atos_manuais/
+!entradas/Diario_oficial/.gitkeep
+saidas/*
+!saidas/.gitkeep
+
+# Gravacoes de trafego dos sites (.har): tem dados de servidores e da sessao
+capturas/
+
+# Arquivos temporarios do Office
+~$*
+entradas/rascunho do processo/
+entradas/tabelas de consulta/
